@@ -15,19 +15,17 @@ class Face(db.Model):
   __tablename__ = 'face'
 
   id = db.Column(db.Integer, primary_key=True)
-  face_id = db.Column(db.Integer)
   encoding = db.Column(JSON)
 
-  def __init__(self, face_id, encoding):
-    self.face_id = face_id
+  def __init__(self, encoding):
     self.encoding = encoding
 
   def __repr__(self):
-    return f"<Face id={self.id}> face_id={self.face_id}"
+    return f"<Face id={self.id}>"
 
 @app.route('/face', methods=['POST'])
 def upload_face():
-  face_id = request.form['face-id']
+  face_id = request.form.get('face-id')
   image_url = request.form['image-url']
 
   image_path = download(image_url)
@@ -37,22 +35,27 @@ def upload_face():
 
   list = encoding.tolist()
 
-  save_face_record(face_id, list)
+  face = save_face_record(list, face_id = face_id)
 
   delteFile(image_path)
 
-  return jsonify(faceId=face_id, encoding=list)
+  return jsonify(faceId=face.id, faceEncoding=list)
 
-def save_face_record(face_id, list):
-  face = Face.query.filter_by(face_id = face_id).first()
+def save_face_record(list, face_id=None):
+  if face_id:
+    face = Face.query.get(face_id)
 
-  if face:
-    face.encoding = list
-    db.session.commit()
+    if face:
+      face.encoding = list
+      db.session.commit()
+
+      return face
   else:
-    face = Face(face_id, list)
+    face = Face(list)
     db.session.add(face)
     db.session.commit()
+
+    return face
 
 def download(url):
   local_filename = url.split('/')[-1]
