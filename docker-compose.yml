@@ -1,4 +1,4 @@
-version: '3'
+version: "3.7"
 services:
   web:
     build: ./docker/web
@@ -10,18 +10,17 @@ services:
     ports:
       - "80:80"
     environment:
-      - FLASK_APP=app/main.py
-      - FLASK_DEBUG=1
-      - 'RUN=flask run --host=0.0.0.0 --port=80'
-      - DATABASE_URL=db:///wordcount_dev
+      FLASK_APP: "./app/main.py"
+      FLASK_DEBUG: 1
+      DATABASE_URL: "postgresql://postgres@db/postgres"
+      APP_SETTINGS: "config.DevelopmentConfig"
     command: "flask run --host=0.0.0.0 --port=80"
 
   db:
     image: postgres
     environment:
-      - POSTGRES_DB=face_recognition
-      - POSTGRES_HOST_AUTH_METHOD=trust
-      - LC_ALL=C.UTF-8
+      POSTGRES_HOST_AUTH_METHOD: trust
+      LC_ALL: "C.UTF-8"
 
 volumes:
   python:
