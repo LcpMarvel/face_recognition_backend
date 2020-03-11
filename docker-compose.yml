@@ -1,0 +1,29 @@
+version: '3'
+services:
+  web:
+    build: ./docker/web
+    volumes:
+      - ./app:/app
+      - postgres:/var/lib/postgresql/data
+      - python:/usr/local/lib/python3.6
+      - pip_cache:/root/.cache
+    ports:
+      - "80:80"
+    environment:
+      - FLASK_APP=app/main.py
+      - FLASK_DEBUG=1
+      - 'RUN=flask run --host=0.0.0.0 --port=80'
+      - DATABASE_URL=db:///wordcount_dev
+    command: "flask run --host=0.0.0.0 --port=80"
+
+  db:
+    image: postgres
+    environment:
+      - POSTGRES_DB=face_recognition
+      - POSTGRES_HOST_AUTH_METHOD=trust
+      - LC_ALL=C.UTF-8
+
+volumes:
+  python:
+  pip_cache:
+  postgres:
