@@ -20,8 +20,10 @@ It built using dlib's state-of-the-art face recognition built with deep learning
 
 ## Installation on Mac OSX
 Simply install backend service at the root of this project by:
-`$ cd /PATH/TO/face_recognition_backend`
-`$ docker-compose up`
+```
+$ cd /PATH/TO/face_recognition_backend
+$ docker-compose up`
+```
 
 # Usage
 Backend tool can be used as a web api by web service client or codebase.All you need is to create a http post with an image-url as a parameter. It returns a image encoding with a given face id. 
