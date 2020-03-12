@@ -28,24 +28,24 @@ $ docker-compose up`
 # APIs
 Backend is a container running on docker which can be used as a web service client in any codebase.
 
-## face
+##   face
 add a face to face dataset. It generates a image encoding for that face with a given face id.
 
-### Request
+###   Request
 http://0.0.0.0/face
 
-### Method
+###   Method
 POST
 
-### Parameters
+###   Parameters
 image_url  String  URL of a face image
 
-### Return
+###   Return
 JSON Object
-#### Success :
+####     Success :
 face_encoding : image encoding data for face dataset and face analyze
 face_id: identity for this face image 
-#### Failure
+####     Failure
 error_type: error number
 error_message: message for this error
 
