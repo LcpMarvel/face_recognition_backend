@@ -31,7 +31,7 @@ def upload_face():
   image_path = download(image_url)
 
   file = face_recognition.load_image_file(image_path)
-  encoding = face_recognition.face_encodings(file)[0]
+  encoding = face_recognition.face_encodings(file, num_jitters=10, model="large")[0]
 
   list = encoding.tolist()
 
