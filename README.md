@@ -29,16 +29,16 @@ $ docker-compose up`
 Backend is a container running on docker which can be used as a web service client in any codebase.
 
 ## 1. face
-add a face to face dataset. It generates a image encoding for that face with a given face id.
+Add a face to face dataset. It generates a image encoding for that face with a given face id.
 ### Request
 http://0.0.0.0/face
 ### Method
 POST
 ### Parameters
-image_url  String  URL of a face image
+image_url | String | URL of a face image
 ### Return
 JSON Object
-#### Success :
+#### Success
 face_encoding : image encoding data for face dataset and face analyze
 face_id: identity for this face image 
 #### Failure
@@ -55,18 +55,18 @@ payload = { 'image-url': URI/TO/FACE/IMAGE }
 result = requests.post('http://backend_url/face', data=payload).json()
 ```
 ## 2. face_dataset
-get a set of face data from backend according a specific timestamp range.
+Get a set of face data from backend according a specific timestamp range.
 ### Request
 http://0.0.0.0/face_dataset
 ### Method
 POST
 ### Parameters
-timestamp_begin  number 
-timestamp_end number 
+timestamp_begin | number 
+timestamp_end | number 
 ### Return
 JOSN Object
 #### Success
-face_set: array for a set of face encodings and face_id
+face_set | Array | a set of face encodings and face_id
 #### Failure
 error_type: error number
 error_message: message for this error
