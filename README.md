@@ -19,15 +19,37 @@ It built using dlib's state-of-the-art face recognition built with deep learning
 * Docker 19.03.4
 
 ## Installation on Mac OSX
-Simply install backend service at the root of this project by:
+Simply install backend by:
 ```
 $ cd /PATH/TO/face_recognition_backend
 $ docker-compose up`
 ```
 
-# Usage
-Backend tool can be used as a web api by web service client or codebase.All you need is to create a http post with an image-url as a parameter. It returns a image encoding with a given face id. 
-Here is a sample call this service in Python 
+# APIs
+Backend is a container running on docker which can be used as a web service client in any codebase.
+
+## face
+add a face to face dataset. It generates a image encoding for that face with a given face id.
+
+### Request
+http://0.0.0.0/face
+
+### Method
+POST
+
+### Parameters
+image_url  String  URL of a face image
+
+### Return
+JSON Object
+#### Success :
+face_encoding : image encoding data for face dataset and face analyze
+face_id: identity for this face image 
+#### Failure
+error_type: error number
+error_message: message for this error
+
+### Sample 
 ```
 #!/usr/bin/env python3
 import requests
@@ -36,9 +58,8 @@ import sys
 
 payload = { 'image-url': URI/TO/FACE/IMAGE }
 result = requests.post('http://backend_url/face', data=payload).json()
-
 ```
-See Also
+# See Also
 https://github.com/ageitgey/face_recognition
 
 # Lisence
