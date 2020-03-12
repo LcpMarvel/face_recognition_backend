@@ -16,6 +16,8 @@ provides a simple face_recognition command line tool to let you do a face recogn
 
 # Installations
 
+1. Run `docker-compose up`
+
 ## Requirements
 * Python 3.8.0
 * Docker 19.03.4
@@ -25,6 +27,10 @@ provides a simple face_recognition command line tool to let you do a face recogn
 ## Backend Installation
 
 # Usage
+
+1. `POST /face` uploads face to server, it gives you the face encodings and an uniq face id.
+   1. required param: image-url (string)
+   2. optional param: face-id (number) , used to update face.
 
 See Also
 https://github.com/ageitgey/face_recognition
