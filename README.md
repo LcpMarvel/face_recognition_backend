@@ -28,27 +28,22 @@ $ docker-compose up`
 # APIs
 Backend is a container running on docker which can be used as a web service client in any codebase.
 
-##   face
+## face
 add a face to face dataset. It generates a image encoding for that face with a given face id.
-
-###   Request
+### Request
 http://0.0.0.0/face
-
-###   Method
+### Method
 POST
-
-###   Parameters
+### Parameters
 image_url  String  URL of a face image
-
-###   Return
+### Return
 JSON Object
-####     Success :
+#### Success :
 face_encoding : image encoding data for face dataset and face analyze
 face_id: identity for this face image 
-####     Failure
+#### Failure
 error_type: error number
 error_message: message for this error
-
 ### Sample 
 ```
 #!/usr/bin/env python3
@@ -59,6 +54,26 @@ import sys
 payload = { 'image-url': URI/TO/FACE/IMAGE }
 result = requests.post('http://backend_url/face', data=payload).json()
 ```
+## face_dataset
+get a set of face data from backend according a specific timestamp range.
+### Request
+http://0.0.0.0/face_dataset
+### Method
+POST
+### Parameters
+timestamp_begin  number 
+timestamp_end number 
+### Return
+JOSN Object
+#### Success
+face_set: array for a set of face encodings and face_id
+#### Failure
+error_type: error number
+error_message: message for this error
+### Sample
+```
+```
+
 # See Also
 https://github.com/ageitgey/face_recognition
 
