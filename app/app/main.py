@@ -1,4 +1,5 @@
 import os
+from time import time
 from flask import Flask, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.dialects.postgresql import JSON
@@ -16,12 +17,13 @@ class Face(db.Model):
 
   id = db.Column(db.Integer, primary_key=True)
   encoding = db.Column(JSON)
+  updated_at = db.Column(db.Integer, default=time, onupdate=time, index=True)
 
   def __init__(self, encoding):
     self.encoding = encoding
 
   def __repr__(self):
-    return f"<Face id={self.id}>"
+    return f"<Face id={self.id}> updated_at={self.updated_at}"
 
 @app.route('/face', methods=['POST'])
 def upload_face():
@@ -39,7 +41,26 @@ def upload_face():
 
   delteFile(image_path)
 
-  return jsonify(faceId=face.id, faceEncoding=list)
+  return jsonify(faceId=face.id, faceEncoding=list, updatedAt=face.updated_at)
+
+@app.route('/faces/sync')
+def sync_faces():
+  last_updated_at = request.args.get('last_updated_at')
+
+  faces = []
+  if last_updated_at:
+    faces = Face.query.filter(Face.updated_at >= last_updated_at)
+  else:
+    faces = Face.query.all()
+
+  return jsonify(list(map(serialize_face, faces)))
+
+def serialize_face(face):
+  return {
+    'faceId': face.id,
+    'faceEncoding': face.encoding,
+    'updatedAt': face.updated_at,
+  }
 
 def save_face_record(list, face_id=None):
   if face_id:
