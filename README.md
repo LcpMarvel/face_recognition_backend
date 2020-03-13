@@ -35,6 +35,8 @@ http://0.0.0.0/face
 ### Method
 POST
 ### Parameters
+Parameters | Type | Description
+---------- | ---- | -----------
 image_url | String | URL of a face image
 ### Return
 JSON Object
@@ -60,14 +62,17 @@ Get a set of face data from backend according a specific timestamp range.
 http://0.0.0.0/face_dataset
 ### Method
 POST
-### Parameters
-timestamp_begin | number 
-timestamp_end | number 
+Parameters | Type | Description
+---------- | ---- | -----------
+timestamp_begin | number | time range begin
+timestamp_end | number | time range end
 ### Return
 JOSN Object
-#### Success
+** Success **
+Return | Type | Description
+------ | ---- | -----------
 face_set | Array | a set of face encodings and face_id
-#### Failure
+** Failure **
 error_type: error number
 error_message: message for this error
 ### Sample
