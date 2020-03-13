@@ -5,3 +5,4 @@
 $cd /path/to/project
 $docker-composer exec web bash
 $flask db upgrade
+```
