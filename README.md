@@ -30,22 +30,33 @@ Backend is a container running on docker which can be used as a web service clie
 
 ## 1. face
 Add a face to face dataset. It generates a image encoding for that face with a given face id.
+
 ### Request
 http://0.0.0.0/face
+
 ### Method
 POST
+
 ### Parameters
 Parameters | Type | Description
 ---------- | ---- | -----------
-image_url | String | URL of a face image
+image_url | string | URL of a face image
+
 ### Return
 JSON Object
+
 #### Success
-face_encoding : image encoding data for face dataset and face analyze
-face_id: identity for this face image 
+Return | Type | Description
+------ | ---- | -----------
+face_encoding | string | image encoding data for face dataset and face analyze
+face_id | string | identity for this face image 
+
 #### Failure
-error_type: error number
-error_message: message for this error
+Return | Type | Description
+------ | ---- | -----------
+error_type | number | error code
+error_message | string | error message
+
 ### Sample 
 ```
 #!/usr/bin/env python3
@@ -56,25 +67,36 @@ import sys
 payload = { 'image-url': URI/TO/FACE/IMAGE }
 result = requests.post('http://backend_url/face', data=payload).json()
 ```
+
 ## 2. face_dataset
 Get a set of face data from backend according a specific timestamp range.
+
 ### Request
 http://0.0.0.0/face_dataset
+
 ### Method
 POST
+
+### Parameters
 Parameters | Type | Description
 ---------- | ---- | -----------
 timestamp_begin | number | time range begin
 timestamp_end | number | time range end
+
 ### Return
 JOSN Object
-** Success **
+
+#### Success
 Return | Type | Description
 ------ | ---- | -----------
 face_set | Array | a set of face encodings and face_id
-** Failure **
-error_type: error number
-error_message: message for this error
+
+#### Failure
+Return | Type | Description
+------ | ---- | -----------
+error_type | number | error code
+error_message | string | error message
+
 ### Sample
 ```
 ```
