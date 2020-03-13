@@ -73,6 +73,8 @@ error_message: message for this error
 ### Sample
 ```
 ```
+# Data Flow
+![Data Flow](/doc/FacialRecognitionDataFlow.png)
 
 # See Also
 https://github.com/ageitgey/face_recognition
