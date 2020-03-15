@@ -6,9 +6,9 @@ As facial recognition services, it includes facial analysis processes such as fa
 It built using dlib's state-of-the-art face recognition built with deep learning. It also provides a simple face_recognition command-line tool to let you do a face recognition by a live camera.
 
 # Features
-* Facial recognition from a video camera of a android device.
+* Facial recognition from a video camera of an android device.
 * Offline facial recognition on android device
-* Facial sample collecting by a image URL.
+* Facial sample collecting by an image URL.
 * Facial sample management in backend.
 * Provides a tool to synchronize facial samples automatically between frontend and backend.
 * Provides a simple face recognition command-line tool.
@@ -32,7 +32,7 @@ $ docker-compose up
 Backend is a container running on docker which can be used as a web service client in any codebase.
 
 ## 1. face (Create)
-Add a face to face dataset. It generates a image encoding for that face with a given face id.
+Add a face to face dataset. It generates an image encoding for that face with a given face id.
 
 ### Method
 POST
@@ -42,9 +42,6 @@ Parameters | Type | Description
 ---------- | ---- | -----------
 image_url | string | URL of a face image
 unique_args | Object | customized attributes for this face, such as user id, user name, etc. (optional)
-
-### Return
-JSON Object
 
 #### Success
 Return | Type | Description
@@ -80,8 +77,6 @@ Parameters | Type | Description
 ---------- | ---- | -----------
 face_id | number | identity for this face
 
-### Return
-JOSN Object
 
 #### Success
 Return | Type | Description
@@ -109,9 +104,6 @@ Parameters | Type | Description
 ---------- | ---- | -----------
 timestamp_begin | number | time range begin
 timestamp_end | number | time range end
-
-### Return
-JOSN Object
 
 #### Success
 Return | Type | Description
@@ -235,7 +227,7 @@ position| Object | a rectangle position of this face
 ```
 
 ## 6. face/update
-Update a face image with a existed face id.
+Update a face image with an existed face id.
 
 ### Method 
 POST
@@ -260,7 +252,7 @@ error_type | number | error code
 error_message | string | error message
 
 ## 7. face/delete
-Remove a face from face data set.
+Remove a face from the face data set.
 
 ### Method 
 POST
@@ -283,5 +275,5 @@ error_message | string | error message
 # See Also
 https://github.com/ageitgey/face_recognition
 
-# Lisence
+# License
 MIT License
