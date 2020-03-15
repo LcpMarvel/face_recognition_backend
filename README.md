@@ -41,6 +41,7 @@ POST
 Parameters | Type | Description
 ---------- | ---- | -----------
 image_url | string | URL of a face image
+unique_args | Object | customized attributes for this face, such as user id, user name, etc. (optional)
 
 ### Return
 JSON Object
@@ -86,6 +87,7 @@ JOSN Object
 Return | Type | Description
 ------ | ---- | -----------
 face_encoding | string | encoding for the face
+unique_args | Object | customized attributes for this face, such as user id, user name, etc.
 
 #### Failure
 Return | Type | Description
@@ -107,7 +109,6 @@ Parameters | Type | Description
 ---------- | ---- | -----------
 timestamp_begin | number | time range begin
 timestamp_end | number | time range end
-faceset_id | Number | id for the face data set, optional
 
 ### Return
 JOSN Object
@@ -115,7 +116,7 @@ JOSN Object
 #### Success
 Return | Type | Description
 ------ | ---- | -----------
-face_set | Array | a set of face encodings and face_id
+faces | Array | a set of face encodings and face_id
 
 #### Failure
 Return | Type | Description
@@ -137,7 +138,6 @@ POST
 Parameters | Type | Description
 ---------- | ---- | -----------
 image_url | String | face image to campare
-faceset_id | Number | id for the face data set, optional
   
 #### Success
 Return | Type | Description
@@ -151,33 +151,36 @@ error_type | number | error code
 error_message | string | error message
 
 #### faces:
-	face_id Number
-	face_attributes Object
-	trust Number  0-100
+Return | Type | Description
+------ | ---- | -----------
+face_id | number | error code
+trust | number | match ranking, 0-100
+unique_args | Object | customized attributes for this face, such as user id, user name, etc.
+position| Object | a rectangle position of this face
+
 #### ex.
 ```
 {
 	“faces”:[
-	{
+		{
 			“face_id”:
 			“trust”：
-			“face_attributes”:
-			 {
-				“user_id”:
-				“user_name”:
-				“face_position”:
-				{	
-					“top”:
-					“left”
-					“bottom”:
-					“right”:
-				}
+			“unique_args”:
+			{
+				"user_id":
+				"user_name":
 			}
+			“position”:
+			{	
+				“top”:
+				“left”
+				“bottom”:
+				“right”:
+			}
+		
 		},
 		…
 	]
-  "error_type"
-	"error_message":
 }
 ```
 
@@ -204,8 +207,12 @@ error_type | number | error code
 error_message | string | error message
 
 #### faces:
-	face_id Number
-	face_position Object
+Return | Type | Description
+------ | ---- | -----------
+face_id | number | error code
+face_encoding | string | encoding for the face
+position| Object | a rectangle position of this face
+
 #### ex.
 ```
 {
@@ -213,7 +220,7 @@ error_message | string | error message
 		{
 			“face_id”:
 			“face_encoding”:
-			“face_position”:
+			“position”:
 				{	
 					“top”:
 					“left”
@@ -238,6 +245,7 @@ Parameters | Type | Description
 ---------- | ---- | -----------
 image_url | String | face image to update
 face_id | number | identity for this face
+unique_args | Object | customized attributes for this face, such as user id, user name, etc. (optional)
   
 #### Success
 Return | Type | Description
