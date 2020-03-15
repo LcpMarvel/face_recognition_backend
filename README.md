@@ -1,17 +1,17 @@
 # Summary
-This is a lite and fast facial analyze SDK can be used in face recognition application.  
+This is a lite and fast facial analysis SDK that can be used in face recognition applications.  
 
 # Description
-As a facial recognition services, it includes some facial analyze process such as face detect, face search and face comparison. face_recoginition_backend, which is running on a backend server, collects the face samples upload from user, manage it in the face dataset. face_recoginition_frontend, which is running on a client such as andorid and ios, detects and verifies the faces from its live camera. 
-It built using dlib's state-of-the-art face recognition built with deep learning. It also provides a simple face_recognition command line tool to let you do a face recognition by a live carema.
+As facial recognition services, it includes facial analysis processes such as face detect, face search and face comparison. face_recoginition_backend, which is running on a backend server, collects the face samples upload from a user, manages it in the face dataset. face_recoginition_frontend, which is running on a client such as android and ios, detects and verifies the faces from its live camera. 
+It built using dlib's state-of-the-art face recognition built with deep learning. It also provides a simple face_recognition command-line tool to let you do a face recognition by a live camera.
 
 # Features
 * Facial recognition from a video camera of a android device.
 * Offline facial recognition on android device
-* Facial sample collecting by a image url.
+* Facial sample collecting by a image URL.
 * Facial sample management in backend.
-* Provides a tool to syncronize facial samples automatically between frontend and backend.
-* Provides a simple face recognition command line tool.
+* Provides a tool to synchronize facial samples automatically between frontend and backend.
+* Provides a simple face recognition command-line tool.
 
 # Installations
 ## Requirements
@@ -22,7 +22,7 @@ It built using dlib's state-of-the-art face recognition built with deep learning
 Simply install backend by:
 ```
 $ cd /PATH/TO/face_recognition_backend
-$ docker-compose up`
+$ docker-compose up
 ```
 
 # Data Flow
@@ -129,7 +129,7 @@ error_message | string | error message
 ```
 
 ## 4. face/match
-detect the face from the image and compare all the detected face with the face data set.
+Detect the face from the image and compare all the detected face with the face data set.
 
 ### Method 
 POST
@@ -185,7 +185,7 @@ position| Object | a rectangle position of this face
 ```
 
 ## 5. face/detect
-detect faces from the image.
+Detect faces from the image.
 
 ### Method 
 POST
