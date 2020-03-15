@@ -72,7 +72,7 @@ result = requests.post('http://backend_url/face', data=payload).json()
 ```
 
 ## 2. face (Get)
-Get a set of face data from backend according a specific timestamp range.
+Get a face data from backend according to a specific face_id.
 
 ### Request
 http://0.0.0.0/face
@@ -103,7 +103,7 @@ error_message | string | error message
 ```
 
 ## 3. face_dataset
-Get a set of face data from backend according a specific timestamp range.
+Get a set of face data from backend according to a specific timestamp range.
 
 ### Request
 http://0.0.0.0/face_dataset
@@ -116,6 +116,7 @@ Parameters | Type | Description
 ---------- | ---- | -----------
 timestamp_begin | number | time range begin
 timestamp_end | number | time range end
+faceset_id | Number | id for the face data set, optional
 
 ### Return
 JOSN Object
@@ -136,6 +137,7 @@ error_message | string | error message
 ```
 
 ## 4. face/match
+detect the face from the image and compare all the detected face with the face data set.
 ### Method 
 POST
 
@@ -143,6 +145,7 @@ POST
 Parameters | Type | Description
 ---------- | ---- | -----------
 image_url | String | face image to campare
+faceset_id | Number | id for the face data set, optional
   
 #### Success
 Return | Type | Description
@@ -187,6 +190,8 @@ error_message | string | error message
 ```
 
 ## 5. face/detect
+detect faces from the image.
+
 ### Method 
 POST
 
@@ -231,13 +236,14 @@ error_message | string | error message
 ```
 
 ## 6. face/update
+update a face image with a existed face id
 ### Method 
 POST
 
 ### Parameters
 Parameters | Type | Description
 ---------- | ---- | -----------
-image_url | String | face image to campare
+image_url | String | face image to update
 face_id | number | identity for this face
   
 #### Success
@@ -253,6 +259,7 @@ error_type | number | error code
 error_message | string | error message
 
 ## 7. face/delete
+remove a face from face data set
 ### Method 
 POST
 
