@@ -25,10 +25,13 @@ $ cd /PATH/TO/face_recognition_backend
 $ docker-compose up`
 ```
 
+# Data Flow
+![Data Flow](/doc/FacialRecognitionDataFlow.png)
+
 # APIs
 Backend is a container running on docker which can be used as a web service client in any codebase.
 
-## 1. face
+## 1. face (Create)
 Add a face to face dataset. It generates a image encoding for that face with a given face id.
 
 ### Request
@@ -49,7 +52,7 @@ JSON Object
 Return | Type | Description
 ------ | ---- | -----------
 face_encoding | string | image encoding data for face dataset and face analyze
-face_id | string | identity for this face image 
+face_id | number | identity for this face image 
 
 #### Failure
 Return | Type | Description
@@ -68,7 +71,38 @@ payload = { 'image-url': URI/TO/FACE/IMAGE }
 result = requests.post('http://backend_url/face', data=payload).json()
 ```
 
-## 2. face_dataset
+## 2. face (Get)
+Get a set of face data from backend according a specific timestamp range.
+
+### Request
+http://0.0.0.0/face
+
+### Method
+GET
+
+### Parameters
+Parameters | Type | Description
+---------- | ---- | -----------
+face_id | number | identity for this face
+
+### Return
+JOSN Object
+
+#### Success
+Return | Type | Description
+------ | ---- | -----------
+face_encoding | string | encoding for the face
+
+#### Failure
+Return | Type | Description
+------ | ---- | -----------
+error_message | string | error message
+
+### Sample
+```
+```
+
+## 3. face_dataset
 Get a set of face data from backend according a specific timestamp range.
 
 ### Request
@@ -100,8 +134,142 @@ error_message | string | error message
 ### Sample
 ```
 ```
-# Data Flow
-![Data Flow](/doc/FacialRecognitionDataFlow.png)
+
+## 4. face/match
+### Method 
+POST
+
+### Parameters
+Parameters | Type | Description
+---------- | ---- | -----------
+image_url | String | face image to campare
+  
+#### Success
+Return | Type | Description
+------ | ---- | -----------
+faces | Array | a set of face encodings and face_id
+
+#### Failure
+Return | Type | Description
+------ | ---- | -----------
+error_type | number | error code
+error_message | string | error message
+
+#### faces:
+	face_id Number
+	face_attributes Object
+	trust Number  0-100
+#### ex.
+```
+{
+	“faces”:[
+	{
+			“face_id”:
+			“trust”：
+			“face_attributes”:
+			 {
+				“user_id”:
+				“user_name”:
+				“face_position”:
+				{	
+					“top”:
+					“left”
+					“bottom”:
+					“right”:
+				}
+			}
+		},
+		…
+	]
+  "error_type"
+	"error_message":
+}
+```
+
+## 5. face/detect
+### Method 
+POST
+
+### Parameters
+Parameters | Type | Description
+---------- | ---- | -----------
+image_url | String | face image to campare
+  
+#### Success
+Return | Type | Description
+------ | ---- | -----------
+faces | Array | a set of face encodings and face_id
+
+#### Failure
+Return | Type | Description
+------ | ---- | -----------
+error_type | number | error code
+error_message | string | error message
+
+#### faces:
+	face_id Number
+	face_position Object
+#### ex.
+```
+{
+	“faces”:[
+		{
+			“face_id”:
+			“face_encoding”:
+			“face_position”:
+				{	
+					“top”:
+					“left”
+					“bottom”:
+					“right”:
+				}
+		},
+		…
+	]
+	“error_message”:
+}
+```
+
+## 6. face/update
+### Method 
+POST
+
+### Parameters
+Parameters | Type | Description
+---------- | ---- | -----------
+image_url | String | face image to campare
+face_id | number | identity for this face
+  
+#### Success
+Return | Type | Description
+------ | ---- | -----------
+faces | Array | a set of face encodings and face_id
+face_encoding | string | encoding for the face
+
+#### Failure
+Return | Type | Description
+------ | ---- | -----------
+error_type | number | error code
+error_message | string | error message
+
+## 7. face/delete
+### Method 
+POST
+
+### Parameters
+Parameters | Type | Description
+---------- | ---- | -----------
+face_id | number | identity for this face
+  
+#### Success
+Return | Type | Description
+------ | ---- | -----------
+
+#### Failure
+Return | Type | Description
+------ | ---- | -----------
+error_type | number | error code
+error_message | string | error message
 
 # See Also
 https://github.com/ageitgey/face_recognition
