@@ -34,9 +34,6 @@ Backend is a container running on docker which can be used as a web service clie
 ## 1. face (Create)
 Add a face to face dataset. It generates a image encoding for that face with a given face id.
 
-### Request
-http://0.0.0.0/face
-
 ### Method
 POST
 
@@ -74,9 +71,6 @@ result = requests.post('http://backend_url/face', data=payload).json()
 ## 2. face (Get)
 Get a face data from backend according to a specific face_id.
 
-### Request
-http://0.0.0.0/face
-
 ### Method
 GET
 
@@ -104,9 +98,6 @@ error_message | string | error message
 
 ## 3. face_dataset
 Get a set of face data from backend according to a specific timestamp range.
-
-### Request
-http://0.0.0.0/face_dataset
 
 ### Method
 POST
@@ -138,6 +129,7 @@ error_message | string | error message
 
 ## 4. face/match
 detect the face from the image and compare all the detected face with the face data set.
+
 ### Method 
 POST
 
@@ -236,7 +228,8 @@ error_message | string | error message
 ```
 
 ## 6. face/update
-update a face image with a existed face id
+Update a face image with a existed face id.
+
 ### Method 
 POST
 
@@ -259,7 +252,8 @@ error_type | number | error code
 error_message | string | error message
 
 ## 7. face/delete
-remove a face from face data set
+Remove a face from face data set.
+
 ### Method 
 POST
 
