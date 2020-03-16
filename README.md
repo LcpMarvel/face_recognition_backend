@@ -282,6 +282,15 @@ error_message | string | error message
 6. Kill this log when everything is ready
 7. Run `docker-compose exec web bash -c 'flask db upgrade'`
 
+### SSH forward
+1. Add config to your `~/.ssh/config`
+```
+Host *
+ ForwardAgent yes
+```
+2. Run `ssh-add ~/.ssh/id_rsa`
+3. You can clone private repo on server by your `id_rsa` now
+
 # See Also
 https://github.com/ageitgey/face_recognition
 
