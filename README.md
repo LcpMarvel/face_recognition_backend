@@ -267,7 +267,7 @@ POST
 ### Parameters
 Parameters | Type | Description
 ---------- | ---- | -----------
-face_id | number | identity for this face
+face-id | number | identity for this face
   
 #### Success
 Return | Type | Description
