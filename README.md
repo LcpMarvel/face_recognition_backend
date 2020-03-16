@@ -66,7 +66,7 @@ payload = { 'image-url': URI/TO/FACE/IMAGE }
 result = requests.post('http://backend_url/face', data=payload).json()
 ```
 
-## 2. face (Get)
+## 2. face (TODO)
 Get a face data from backend according to a specific face_id.
 
 ### Method
@@ -93,11 +93,11 @@ error_message | string | error message
 ```
 ```
 
-## 3. face/sync
+## 3. faces/sync
 Get a set of face data from backend according to a specific timestamp range.
 
 ### Method
-POST
+GET
 
 ### Parameters
 Parameters | Type | Description
