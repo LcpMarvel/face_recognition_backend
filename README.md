@@ -272,6 +272,16 @@ Return | Type | Description
 error_type | number | error code
 error_message | string | error message
 
+## How to deploy
+
+1. Install `docker` and `docker-compose` on you server
+2. git clone this repo
+3. `cd /PATH/TO/face_recognition_backend`
+4. Run `docker-compose up -d`
+5. Run `docker-compose logs -f web`
+6. Kill this log when everything is ready
+7. Run `docker-compose exec web bash -c 'flask db upgrade'`
+
 # See Also
 https://github.com/ageitgey/face_recognition
 
