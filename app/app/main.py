@@ -101,3 +101,58 @@ def delteFile(path):
 if __name__ == "__main__":
     # Only for debugging while developing
     app.run(host='0.0.0.0', debug=True, port=80)
+
+#
+@app.route('/face/detect', methods=['POST'])
+def detect_face():
+  image_url = request.form['image-url']
+  image_path = download(image_url)
+
+  face_image = face_recognition.load_image_file(image_path)
+  face_locations = face_recognition.face_locations(face_image)
+  face_num =len(face_locations)
+  
+  delteFile(image_path)
+
+  return jsonify(num=face_num, locations=face_locations, image_url=image_url)
+
+@app.route('/face/match', methods=['POST'])
+def search_face():
+  image_url = request.form['image-url']
+  image_path = download(image_url)
+  
+  face_image = face_recognition.load_image_file(image_path)
+  face_locations = face_recognition.face_locations(face_image)
+  face_encodings = face_recognition.face_encodings(face_image, face_locations)
+
+  face_dataset = load_faceset()
+  faceset = list(map(lambda face: face.encoding, face_dataset))
+  face_array = []
+  
+  for index in range(len(face_encodings)):
+    face_to_check=face_encodings[index]
+    matches = face_recognition.compare_faces(faceset, face_to_check, tolerance=0.4)
+
+    if True in matches:
+      first_match_index = matches.index(True)
+    
+      face_id = face_dataset[first_match_index].id
+      position = face_locations[index]
+      trust = 100
+
+      face = {"face_id": face_id, "trust": trust, "position": position}
+      face_array.append(face)
+
+  delteFile(image_path)
+
+  return jsonify(faces=face_array)  
+
+def load_faceset(face_id=None):
+  if face_id:
+    faces = Face.query.get(face_id)
+  else:
+    faces = Face.query.all()
+
+  return faces
+
+    
