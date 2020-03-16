@@ -93,7 +93,7 @@ error_message | string | error message
 ```
 ```
 
-## 3. face_dataset
+## 3. face/sync
 Get a set of face data from backend according to a specific timestamp range.
 
 ### Method
@@ -102,13 +102,12 @@ POST
 ### Parameters
 Parameters | Type | Description
 ---------- | ---- | -----------
-timestamp_begin | number | time range begin
-timestamp_end | number | time range end
+last_updated_at | number | latest update timestamp
 
 #### Success
 Return | Type | Description
 ------ | ---- | -----------
-faces | Array | a set of face encodings and face_id
+faces | Array | a set of face encodings and face ids
 
 #### Failure
 Return | Type | Description
@@ -118,6 +117,14 @@ error_message | string | error message
 
 ### Sample
 ```
+[
+    {
+        "faceEncoding":
+        "faceId": 
+        "updatedAt":
+    },
+    ...
+]
 ```
 
 ## 4. face/match
