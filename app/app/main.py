@@ -25,12 +25,24 @@ class Face(db.Model):
   def __repr__(self):
     return f"<Face id={self.id}> updated_at={self.updated_at}"
 
+class InvalidImageException(Exception): pass
+
+# ----------------- Error handler -----------------
+@app.errorhandler(InvalidImageException)
+def handle_bad_image(e):
+  return jsonify(error='Image URL is invalid'), 400
+
+@app.errorhandler(requests.exceptions.RequestException)
+def handle_bad_request(e):
+    return jsonify(error='bad request!'), 400
+
+# ----------------- Routers -----------------
 @app.route('/face', methods=['POST'])
 def upload_face():
   face_id = request.form.get('face-id')
   image_url = request.form['image-url']
 
-  image_path = download(image_url)
+  image_path = download_image(image_url)
 
   file = face_recognition.load_image_file(image_path)
   encoding = face_recognition.face_encodings(file, num_jitters=10, model="large")[0]
@@ -55,6 +67,91 @@ def sync_faces():
 
   return jsonify(list(map(serialize_face, faces)))
 
+@app.route('/face/detect', methods=['POST'])
+def detect_face():
+  image_url = request.form['image-url']
+  image_path = download_image(image_url)
+
+  face_image = face_recognition.load_image_file(image_path)
+  face_locations = face_recognition.face_locations(face_image)
+  face_num =len(face_locations)
+
+  delete_file(image_path)
+
+  return jsonify(num=face_num, locations=face_locations, image_url=image_url)
+
+@app.route('/face/match', methods=['POST'])
+def search_face():
+  image_url = request.form['image-url']
+  image_path = download_image(image_url)
+
+  face_image = face_recognition.load_image_file(image_path)
+  face_locations = face_recognition.face_locations(face_image)
+  face_encodings = face_recognition.face_encodings(face_image, face_locations)
+
+  face_dataset = load_faceset()
+  faceset = list(map(lambda face: face.encoding, face_dataset))
+  face_array = []
+
+  for index in range(len(face_encodings)):
+    face_to_check=face_encodings[index]
+    matches = face_recognition.compare_faces(faceset, face_to_check, tolerance=0.4)
+
+    if True in matches:
+      first_match_index = matches.index(True)
+
+      face_id = face_dataset[first_match_index].id
+      position = face_locations[index]
+      trust = 100
+
+      face = {"face_id": face_id, "trust": trust, "position": position}
+      face_array.append(face)
+
+  delete_file(image_path)
+
+  return jsonify(faces=face_array)
+
+@app.route('/face/delete', methods=['POST'])
+def delete_face():
+  face_id = request.form.get('face-id')
+  face = Face.query.get(face_id)
+  if face:
+    db.session.delete(face)
+    db.session.commit()
+  return jsonify(faceId=face_id)
+
+# ----------------- Helpers -----------------
+def load_faceset(face_id=None):
+  if face_id:
+    faces = Face.query.get(face_id)
+  else:
+    faces = Face.query.all()
+
+  return faces
+
+def download_image(url):
+  local_filename = url.split('/')[-1]
+  path = '/tmp/' + local_filename
+
+  try:
+    with requests.get(url, stream=True) as r:
+      r.raise_for_status()
+
+      with open(path, 'wb') as f:
+        for chunk in r.iter_content(chunk_size=8192):
+          if chunk:
+            f.write(chunk)
+  except requests.exceptions.RequestException:
+    raise InvalidImageException()
+
+  return path
+
+def delete_file(path):
+  if os.path.exists(path):
+    os.remove(path)
+  else:
+    print("The file does not exist!")
+
 def serialize_face(face):
   return {
     'faceId': face.id,
@@ -78,90 +175,6 @@ def save_face_record(list, face_id=None):
 
     return face
 
-def download(url):
-  local_filename = url.split('/')[-1]
-  path = '/tmp/' + local_filename
-
-  with requests.get(url, stream=True) as r:
-    r.raise_for_status()
-
-    with open(path, 'wb') as f:
-      for chunk in r.iter_content(chunk_size=8192):
-        if chunk:
-          f.write(chunk)
-
-  return path
-
-def delete_file(path):
-  if os.path.exists(path):
-    os.remove(path)
-  else:
-    print("The file does not exist!")
-
 if __name__ == "__main__":
     # Only for debugging while developing
     app.run(host='0.0.0.0', debug=True, port=80)
-
-#
-@app.route('/face/detect', methods=['POST'])
-def detect_face():
-  image_url = request.form['image-url']
-  image_path = download(image_url)
-
-  face_image = face_recognition.load_image_file(image_path)
-  face_locations = face_recognition.face_locations(face_image)
-  face_num =len(face_locations)
-  
-  delete_file(image_path)
-
-  return jsonify(num=face_num, locations=face_locations, image_url=image_url)
-
-@app.route('/face/match', methods=['POST'])
-def search_face():
-  image_url = request.form['image-url']
-  image_path = download(image_url)
-  
-  face_image = face_recognition.load_image_file(image_path)
-  face_locations = face_recognition.face_locations(face_image)
-  face_encodings = face_recognition.face_encodings(face_image, face_locations)
-
-  face_dataset = load_faceset()
-  faceset = list(map(lambda face: face.encoding, face_dataset))
-  face_array = []
-  
-  for index in range(len(face_encodings)):
-    face_to_check=face_encodings[index]
-    matches = face_recognition.compare_faces(faceset, face_to_check, tolerance=0.4)
-
-    if True in matches:
-      first_match_index = matches.index(True)
-    
-      face_id = face_dataset[first_match_index].id
-      position = face_locations[index]
-      trust = 100
-
-      face = {"face_id": face_id, "trust": trust, "position": position}
-      face_array.append(face)
-
-  delete_file(image_path)
-
-  return jsonify(faces=face_array)  
-
-def load_faceset(face_id=None):
-  if face_id:
-    faces = Face.query.get(face_id)
-  else:
-    faces = Face.query.all()
-
-  return faces
-
-@app.route('/face/delete', methods=['POST'])
-def delete_face():
-  face_id = request.form.get('face-id')
-  face = Face.query.get(face_id)
-  if face:
-    db.session.delete(face)
-    db.session.commit()
-  return jsonify(faceId=face_id)
-
-    
