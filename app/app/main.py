@@ -39,7 +39,7 @@ def upload_face():
 
   face = save_face_record(list, face_id = face_id)
 
-  delteFile(image_path)
+  delete_file(image_path)
 
   return jsonify(faceId=face.id, faceEncoding=list, updatedAt=face.updated_at)
 
@@ -92,7 +92,7 @@ def download(url):
 
   return path
 
-def delteFile(path):
+def delete_file(path):
   if os.path.exists(path):
     os.remove(path)
   else:
@@ -112,7 +112,7 @@ def detect_face():
   face_locations = face_recognition.face_locations(face_image)
   face_num =len(face_locations)
   
-  delteFile(image_path)
+  delete_file(image_path)
 
   return jsonify(num=face_num, locations=face_locations, image_url=image_url)
 
@@ -143,7 +143,7 @@ def search_face():
       face = {"face_id": face_id, "trust": trust, "position": position}
       face_array.append(face)
 
-  delteFile(image_path)
+  delete_file(image_path)
 
   return jsonify(faces=face_array)  
 
@@ -154,5 +154,14 @@ def load_faceset(face_id=None):
     faces = Face.query.all()
 
   return faces
+
+@app.route('/face/delete', methods=['POST'])
+def delete_face():
+  face_id = request.form.get('face-id')
+  face = Face.query.get(face_id)
+  if face:
+    db.session.delete(face)
+    db.session.commit()
+  return jsonify(faceId=face_id)
 
     
