@@ -6,9 +6,14 @@ from sqlalchemy.dialects.postgresql import JSON
 from flask_migrate import Migrate
 import requests
 import face_recognition
+from werkzeug.utils import secure_filename
+
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
+app.config['UPLOAD_FOLDER'] = '/tmp'
+app.config['MAX_CONTENT_LENGTH'] = 5 * 1024 * 1024
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
@@ -26,8 +31,13 @@ class Face(db.Model):
     return f"<Face id={self.id}> updated_at={self.updated_at}"
 
 class InvalidImageException(Exception): pass
+class ImageNotFoundException(Exception): pass
 
 # ----------------- Error handler -----------------
+@app.errorhandler(ImageNotFoundException)
+def handle_image_not_found(e):
+  return jsonify(error='Image not found or unsupported!'), 400
+
 @app.errorhandler(InvalidImageException)
 def handle_bad_image(e):
   return jsonify(error='Image URL is invalid'), 400
@@ -40,9 +50,7 @@ def handle_bad_request(e):
 @app.route('/face', methods=['POST'])
 def upload_face():
   face_id = request.form.get('face-id')
-  image_url = request.form['image-url']
-
-  image_path = download_image(image_url)
+  image_path = get_image_from_request(request)
 
   file = face_recognition.load_image_file(image_path)
   encoding = face_recognition.face_encodings(file, num_jitters=10, model="large")[0]
@@ -70,7 +78,7 @@ def sync_faces():
 @app.route('/face/detect', methods=['POST'])
 def detect_face():
   image_url = request.form['image-url']
-  image_path = download_image(image_url)
+  image_path = get_image_from_request(request)
 
   face_image = face_recognition.load_image_file(image_path)
   face_locations = face_recognition.face_locations(face_image)
@@ -83,7 +91,7 @@ def detect_face():
 @app.route('/face/match', methods=['POST'])
 def search_face():
   image_url = request.form['image-url']
-  image_path = download_image(image_url)
+  image_path = get_image_from_request(request)
 
   face_image = face_recognition.load_image_file(image_path)
   face_locations = face_recognition.face_locations(face_image)
@@ -121,6 +129,27 @@ def delete_face():
   return jsonify(faceId=face_id)
 
 # ----------------- Helpers -----------------
+def allowed_file(filename):
+  return '.' in filename and \
+    filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+def get_image_from_request(request):
+  image_url = request.form.get('image-url')
+
+  if image_url:
+    return download_image(image_url)
+
+  file = request.files.get('image')
+
+  if file and allowed_file(file.filename):
+    filename = secure_filename(file.filename)
+    image_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+    file.save(image_path)
+
+    return image_path
+
+  raise ImageNotFoundException()
+
 def load_faceset(face_id=None):
   if face_id:
     faces = Face.query.get(face_id)
