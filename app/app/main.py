@@ -72,13 +72,6 @@ def query_face():
   else:
     return jsonify(faceId=face_id, error_message="Invalid Face ID")
 
-@app.route('/face/update', methods=['POST'])
-def update_face():
-  face_id = request.form.get('face-id')
-  face_encoding = request.form.get('face-encoding')
-  face = save_face(face_encoding, face_id)
-  return jsonify(faceId=face.id, faceEncoding=face.encoding, updatedAt=face.updated_at)
-
 @app.route('/face/delete', methods=['POST'])
 def delete_face():
   face_id = request.form.get('face-id')
@@ -88,9 +81,9 @@ def delete_face():
     db.session.commit()
   return jsonify(faceId=face_id)
 
-@app.route('/faces/sync')
+@app.route('/face/sync')
 def sync_faces():
-  last_updated_at = request.args.get('last_updated_at')
+  last_updated_at = request.args.get('last-updated-at')
 
   faces = []
   if last_updated_at:
@@ -102,7 +95,6 @@ def sync_faces():
 
 @app.route('/face/detect', methods=['POST'])
 def detect_face():
-  image_url = request.form['image-url']
   image_path = get_image_from_request(request)
 
   face_image = face_recognition.load_image_file(image_path)
@@ -111,11 +103,10 @@ def detect_face():
 
   delete_file(image_path)
 
-  return jsonify(num=face_num, locations=face_locations, image_url=image_url)
+  return jsonify(num=face_num, locations=face_locations)
 
 @app.route('/face/match', methods=['POST'])
 def search_face():
-  image_url = request.form['image-url']
   image_path = get_image_from_request(request)
 
   face_image = face_recognition.load_image_file(image_path)
@@ -143,6 +134,7 @@ def search_face():
   delete_file(image_path)
 
   return jsonify(faces=face_array)
+
 # ----------------- Helpers -----------------
 def allowed_file(filename):
   return '.' in filename and \
