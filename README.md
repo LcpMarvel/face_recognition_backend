@@ -31,7 +31,7 @@ $ docker-compose up
 # APIs
 Backend is a container running on docker which can be used as a web service client in any codebase.
 
-## 1. face (Create)
+## 1. face (Create & Update)
 Add a face to face dataset. It generates an image encoding for that face with a given face id.
 
 ### Method
@@ -40,22 +40,17 @@ POST
 ### Parameters
 Parameters | Type | Description
 ---------- | ---- | -----------
-image_url | string | URL of a face image
-unique_args | Object | customized attributes for this face, such as user id, user name, etc. (optional)
+image-url | string | URL of a face image
+face-id | number | identity for this face image, for updating an existed face data (optional)
 
-#### Success
+#### Return
 Return | Type | Description
 ------ | ---- | -----------
-face_encoding | string | image encoding data for face dataset and face analyze
-face_id | number | identity for this face image 
+faceId | number | identity for this face image 
+faceEncoding | string | image encoding data for face dataset and face analyze
+updateAt | number | timestamp for adding face 
 
-#### Failure
-Return | Type | Description
------- | ---- | -----------
-error_type | number | error code
-error_message | string | error message
-
-### Sample 
+### ex. 
 ```
 #!/usr/bin/env python3
 import requests
@@ -66,7 +61,7 @@ payload = { 'image-url': URI/TO/FACE/IMAGE }
 result = requests.post('http://backend_url/face', data=payload).json()
 ```
 
-## 2. face (TODO)
+## 2. face (GET)
 Get a face data from backend according to a specific face_id.
 
 ### Method
@@ -75,25 +70,30 @@ GET
 ### Parameters
 Parameters | Type | Description
 ---------- | ---- | -----------
-face_id | number | identity for this face
+face-id | number | identity for this face
 
+#### Return
+Return | Type | Description
+------ | ---- | -----------
+faceId | number | identity for this face
+faceEncoding | string | encoding for the face
 
+## 3. face/delete
+Remove a face from the face data set.
+
+### Method 
+POST
+
+### Parameters
+Parameters | Type | Description
+---------- | ---- | -----------
+face-id | number | identity for this face
+  
 #### Success
 Return | Type | Description
 ------ | ---- | -----------
-face_encoding | string | encoding for the face
-unique_args | Object | customized attributes for this face, such as user id, user name, etc.
 
-#### Failure
-Return | Type | Description
------- | ---- | -----------
-error_message | string | error message
-
-### Sample
-```
-```
-
-## 3. faces/sync
+## 4. face/sync
 Get a set of face data from backend according to a specific timestamp range.
 
 ### Method
@@ -102,20 +102,14 @@ GET
 ### Parameters
 Parameters | Type | Description
 ---------- | ---- | -----------
-last_updated_at | number | latest update timestamp
+last-updated-at | number | latest update timestamp （optional），eitherwise return all faces.
 
-#### Success
+#### Return
 Return | Type | Description
 ------ | ---- | -----------
 faces | Array | a set of face encodings and face ids
 
-#### Failure
-Return | Type | Description
------- | ---- | -----------
-error_type | number | error code
-error_message | string | error message
-
-### Sample
+### ex.
 ```
 [
     {
@@ -136,26 +130,19 @@ POST
 ### Parameters
 Parameters | Type | Description
 ---------- | ---- | -----------
-image_url | String | face image to campare
+image-url | String | face image to campare
   
-#### Success
+#### Return
 Return | Type | Description
 ------ | ---- | -----------
 faces | Array | a set of face encodings and face_id
 
-#### Failure
-Return | Type | Description
------- | ---- | -----------
-error_type | number | error code
-error_message | string | error message
-
-#### faces:
+#### Object of faces:
 Return | Type | Description
 ------ | ---- | -----------
 face_id | number | error code
 trust | number | match ranking, 0-100
-unique_args | Object | customized attributes for this face, such as user id, user name, etc.
-position| Object | a rectangle position of this face
+position| Object | found face locations in css (top, right, bottom, left) order
 
 #### ex.
 ```
@@ -164,17 +151,12 @@ position| Object | a rectangle position of this face
 		{
 			“face_id”:
 			“trust”：
-			“unique_args”:
-			{
-				"user_id":
-				"user_name":
-			}
 			“position”:
 			{	
 				“top”:
-				“left”
+				“right”
 				“bottom”:
-				“right”:
+				“left”:
 			}
 		
 		},
@@ -192,25 +174,12 @@ POST
 ### Parameters
 Parameters | Type | Description
 ---------- | ---- | -----------
-image_url | String | face image to campare
+image-url | String | face image to campare
   
 #### Success
 Return | Type | Description
 ------ | ---- | -----------
 faces | Array | a set of face encodings and face_id
-
-#### Failure
-Return | Type | Description
------- | ---- | -----------
-error_type | number | error code
-error_message | string | error message
-
-#### faces:
-Return | Type | Description
------- | ---- | -----------
-face_id | number | error code
-face_encoding | string | encoding for the face
-position| Object | a rectangle position of this face
 
 #### ex.
 ```
@@ -232,52 +201,6 @@ position| Object | a rectangle position of this face
 	“error_message”:
 }
 ```
-
-## 6. face/update
-Update a face image with an existed face id.
-
-### Method 
-POST
-
-### Parameters
-Parameters | Type | Description
----------- | ---- | -----------
-image_url | String | face image to update
-face_id | number | identity for this face
-unique_args | Object | customized attributes for this face, such as user id, user name, etc. (optional)
-  
-#### Success
-Return | Type | Description
------- | ---- | -----------
-faces | Array | a set of face encodings and face_id
-face_encoding | string | encoding for the face
-
-#### Failure
-Return | Type | Description
------- | ---- | -----------
-error_type | number | error code
-error_message | string | error message
-
-## 7. face/delete
-Remove a face from the face data set.
-
-### Method 
-POST
-
-### Parameters
-Parameters | Type | Description
----------- | ---- | -----------
-face-id | number | identity for this face
-  
-#### Success
-Return | Type | Description
------- | ---- | -----------
-
-#### Failure
-Return | Type | Description
------- | ---- | -----------
-error_type | number | error code
-error_message | string | error message
 
 ## How to deploy
 
