@@ -57,11 +57,36 @@ def upload_face():
 
   list = encoding.tolist()
 
-  face = save_face_record(list, face_id = face_id)
+  face = save_face(list, face_id = face_id)
 
   delete_file(image_path)
 
   return jsonify(faceId=face.id, faceEncoding=list, updatedAt=face.updated_at)
+
+@app.route('/face')
+def query_face():
+  face_id = request.args.get('face-id')
+  face = Face.query.get(face_id)
+  if face:
+    return jsonify(faceId=face.id, faceEncoding=face.encoding)
+  else:
+    return jsonify(faceId=face_id, error_message="Invalid Face ID")
+
+@app.route('/face/update', methods=['POST'])
+def update_face():
+  face_id = request.form.get('face-id')
+  face_encoding = request.form.get('face-encoding')
+  face = save_face(face_encoding, face_id)
+  return jsonify(faceId=face.id, faceEncoding=face.encoding, updatedAt=face.updated_at)
+
+@app.route('/face/delete', methods=['POST'])
+def delete_face():
+  face_id = request.form.get('face-id')
+  face = Face.query.get(face_id)
+  if face:
+    db.session.delete(face)
+    db.session.commit()
+  return jsonify(faceId=face_id)
 
 @app.route('/faces/sync')
 def sync_faces():
@@ -118,16 +143,6 @@ def search_face():
   delete_file(image_path)
 
   return jsonify(faces=face_array)
-
-@app.route('/face/delete', methods=['POST'])
-def delete_face():
-  face_id = request.form.get('face-id')
-  face = Face.query.get(face_id)
-  if face:
-    db.session.delete(face)
-    db.session.commit()
-  return jsonify(faceId=face_id)
-
 # ----------------- Helpers -----------------
 def allowed_file(filename):
   return '.' in filename and \
@@ -188,7 +203,7 @@ def serialize_face(face):
     'updatedAt': face.updated_at,
   }
 
-def save_face_record(list, face_id=None):
+def save_face(list, face_id=None):
   if face_id:
     face = Face.query.get(face_id)
 
