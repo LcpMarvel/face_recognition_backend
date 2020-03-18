@@ -36,8 +36,6 @@ class Face(db.Model):
 
 class InvalidImageException(Exception): pass
 class ImageNotFoundException(Exception): pass
-class InvalidFaceIDException(Exception): pass
-class MissingFaceIDException(Exception): pass
 
 # ----------------- Error handler -----------------
 @app.errorhandler(ImageNotFoundException)
@@ -51,14 +49,6 @@ def handle_bad_image(e):
 @app.errorhandler(requests.exceptions.RequestException)
 def handle_bad_request(e):
     return jsonify(error='bad request!'), 400
-
-@app.errorhandler(InvalidFaceIDException)
-def handle_bad_faceId(e):
-  return jsonify(error='Face ID is invalid'), 400
-
-@app.errorhandler(MissingFaceIDException)
-def handle_missing_faceId(e):
-  return jsonify(error='Face ID is missing'), 400
 
 # ----------------- Routers -----------------
 @app.route('/face', methods=['POST'])
@@ -77,27 +67,19 @@ def upload_face():
 
   return jsonify(faceId=face.id, faceEncoding=list, updatedAt=face.updated_at)
 
-@app.route('/face')
-def query_face():
-  face_id = request.args.get('face-id')
-
+@app.route('/face/<face_id>')
+def query_face(face_id):
   face = load_face(face_id)
+
   if face:
-    if face_id:
-      return jsonify(faceId=face.id, faceEncoding=face.encoding, updatedAt=face.updated_at)
-    else:
-      return jsonify(list(map(serialize_face, face)))
+    return jsonify(faceId=face.id, faceEncoding=face.encoding, updatedAt=face.updated_at)
+  else:
+    return jsonify(error="Face Not Found!"), 404
 
-  raise InvalidFaceIDException()
-
-@app.route('/face/delete', methods=['POST'])
-def delete_face():
-  face_id = request.form.get('face-id')
-
+@app.route('/face/<face_id>/delete', methods=['POST'])
+def delete_face(face_id):
   if face_id:
     delete_face(face_id)
-  else:
-    raise MissingFaceIDException()
 
   return jsonify(faceId=face_id)
 

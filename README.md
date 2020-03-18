@@ -61,16 +61,11 @@ payload = { 'image-url': URI/TO/FACE/IMAGE }
 result = requests.post('http://backend_url/face', data=payload).json()
 ```
 
-## 2. face (GET)
+## 2. face/<face-id>
 Get a face data from backend according to a specific face_id.
 
 ### Method
 GET
-
-### Parameters
-Parameters | Type | Description
----------- | ---- | -----------
-face-id | number | identity for this face
 
 #### Return
 Return | Type | Description
@@ -78,16 +73,11 @@ Return | Type | Description
 faceId | number | identity for this face
 faceEncoding | string | encoding for the face
 
-## 3. face/delete
+## 3. face/<face-id>/delete
 Remove a face from the face data set.
 
 ### Method 
 POST
-
-### Parameters
-Parameters | Type | Description
----------- | ---- | -----------
-face-id | number | identity for this face
   
 #### Success
 Return | Type | Description
