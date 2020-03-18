@@ -16,7 +16,7 @@ app.config['UPLOAD_FOLDER'] = '/tmp'
 app.config['MAX_CONTENT_LENGTH'] = 5 * 1024 * 1024
 app.config['FACE_ENCODING_NUM_JITTERS'] = 10
 app.config['FACE_ENCODING_MODEL'] = "large"
-app.config['FACE_LOCATION_NUM_UNSAMPLE'] = 3
+app.config['FACE_LOCATION_NUM_UNSAMPLE'] = 1
 
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
