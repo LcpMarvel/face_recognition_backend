@@ -1,10 +1,12 @@
 import os
 from time import time
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, Response
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.dialects.postgresql import JSON
 from flask_migrate import Migrate
 import requests
+from aliyunsdkcore import client
+from aliyunsdksts.request.v20150401 import AssumeRoleRequest
 import face_recognition
 from werkzeug.utils import secure_filename
 
@@ -14,9 +16,18 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
 app.config['UPLOAD_FOLDER'] = '/tmp'
 app.config['MAX_CONTENT_LENGTH'] = 5 * 1024 * 1024
+
+# face recognition config
 app.config['FACE_ENCODING_NUM_JITTERS'] = 10
 app.config['FACE_ENCODING_MODEL'] = "large"
 app.config['FACE_LOCATION_NUM_UNSAMPLE'] = 1
+
+# OSS config
+app.config['OSS_HOST'] = os.environ['ALIYUN_OSS_HOST']
+app.config['OSS_ACCESS_KEY_ID'] = os.environ['ALIYUN_OSS_ACCESS_KEY_ID']
+app.config['OSS_ACCESS_KEY_SECRET'] = os.environ['ALIYUN_OSS_ACCESS_KEY_SECRET']
+app.config['OSS_BUCKET_NAME'] = os.environ['ALIYUN_OSS_BUCKET_NAME']
+app.config['OSS_ROLE_ARN'] = os.environ['ALIYUN_OSS_ROLE_ARN']
 
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
@@ -120,7 +131,7 @@ def search_face():
   face_array = []
   for index in range(len(face_encodings)):
     face_to_check=face_encodings[index]
-    matches = face_recognition.compare_faces(known_encodings, face_to_check, tolerance=0.6)
+    matches = face_recognition.compare_faces(known_encodings, face_to_check, tolerance=0.5)
 
     if True in matches:
       first_match_index = matches.index(True)
@@ -136,6 +147,23 @@ def search_face():
 
   return jsonify(faces=face_array)
 
+@app.route('/oss-auth', methods=['POST'])
+def oss_auth():
+  access_key_id = app.config['OSS_ACCESS_KEY_ID']
+  access_key_secret = app.config['OSS_ACCESS_KEY_SECRET']
+  bucket_name = app.config['OSS_BUCKET_NAME']
+  role_arn = app.config['OSS_ROLE_ARN']
+
+  clt = client.AcsClient(access_key_id, access_key_secret, 'cn-hongkong')
+  req = AssumeRoleRequest.AssumeRoleRequest()
+
+  req.set_accept_format('json')
+  req.set_RoleArn(role_arn)
+  req.set_RoleSessionName('python-face-recognition')
+  body = clt.do_action(req)
+
+  return Response(body, mimetype='application/json')
+
 # ----------------- Helpers -----------------
 def allowed_file(filename):
   return '.' in filename and \
@@ -146,6 +174,11 @@ def get_image_from_request(request):
 
   if image_url:
     return download_image(image_url)
+
+  image_key = request.form.get('image-key')
+
+  if image_key:
+    return download_image(f"{app.config['OSS_HOST']}/{image_key}")
 
   file = request.files.get('image')
 

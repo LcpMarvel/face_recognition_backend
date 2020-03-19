@@ -1,4 +1,4 @@
-version: "3.7"
+version: '3.7'
 services:
   web:
     build: ./docker/web
@@ -8,19 +8,24 @@ services:
       - python:/usr/local/lib/python3.6
       - pip_cache:/root/.cache
     ports:
-      - "80:80"
+      - '80:80'
     environment:
-      FLASK_APP: "./app/main.py"
-      FLASK_DEBUG: 1
-      DATABASE_URL: "postgresql://postgres@db/postgres"
-      APP_SETTINGS: "config.DevelopmentConfig"
-    command: "flask run --host=0.0.0.0 --port=80"
+      FLASK_APP: './app/main.py'
+      FLASK_DEBUG: "${FLASK_DEBUG}"
+      DATABASE_URL: 'postgresql://postgres@db/postgres'
+      APP_SETTINGS: 'config.DevelopmentConfig'
+      ALIYUN_OSS_HOST: "${ALIYUN_OSS_HOST}"
+      ALIYUN_OSS_ACCESS_KEY_ID: "${ALIYUN_OSS_ACCESS_KEY_ID}"
+      ALIYUN_OSS_ACCESS_KEY_SECRET: "${ALIYUN_OSS_ACCESS_KEY_SECRET}"
+      ALIYUN_OSS_BUCKET_NAME: "${ALIYUN_OSS_BUCKET_NAME}"
+      ALIYUN_OSS_ROLE_ARN: "${ALIYUN_OSS_ROLE_ARN}"
+    command: 'flask run --host=0.0.0.0 --port=80'
 
   db:
     image: postgres
     environment:
       POSTGRES_HOST_AUTH_METHOD: trust
-      LC_ALL: "C.UTF-8"
+      LC_ALL: 'C.UTF-8'
 
 volumes:
   python:
