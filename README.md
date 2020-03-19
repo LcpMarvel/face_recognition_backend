@@ -194,13 +194,20 @@ faces | Array | a set of face encodings and face_id
 
 ## How to deploy
 
-1. Install `docker` and `docker-compose` on you server
-2. git clone this repo
-3. `cd /PATH/TO/face_recognition_backend`
-4. Run `docker-compose up -d`
-5. Run `docker-compose logs -f web`
-6. Kill this log when everything is ready
-7. Run `docker-compose exec web bash -c 'flask db upgrade'`
+### How to add user for deploy
+1. Connect to server `ssh root@server_ip_address`
+2. Run `adduser ubuntu` to add a user
+3. Run `usermod -aG sudo ubuntu` to add user to to sudo group
+4. Run `update-alternatives --config editor` to update default editor, vim is better
+5. Run `visudo` and append `ubuntu ALL=(ALL) NOPASSWD:ALL` to the end of the file
+6. Run `su - ubuntu` to switch to that user
+7. Clone this repo
+8. `cd /PATH/TO/face_recognition_backend`
+9. Run `./init-docker.sh` to install docker
+10. Run `docker-compose up -d`
+11. Run `docker-compose logs -f web`
+12. Kill this log when everything is ready
+13. Run `docker-compose exec web bash -c 'flask db upgrade'`
 
 ### SSH forward
 1. Add config to your `~/.ssh/config`
