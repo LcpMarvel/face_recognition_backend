@@ -175,19 +175,17 @@ def get_image_from_request(request):
   if image_url:
     return download_image(image_url)
 
-  image_key = request.form.get('image-key')
-
-  if image_key:
-    return download_image(f"{app.config['OSS_HOST']}/{image_key}")
-
   file = request.files.get('image')
-
   if file and allowed_file(file.filename):
     filename = secure_filename(file.filename)
     image_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
     file.save(image_path)
 
     return image_path
+
+  image_key = request.form.get('image-key')
+  if image_key:
+    return download_image(f"{app.config['OSS_HOST']}/{image_key}")
 
   raise ImageNotFoundException()
 
