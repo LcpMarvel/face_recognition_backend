@@ -1,4 +1,5 @@
 import os
+import numpy as np
 from time import time
 from flask import Flask, jsonify, request, Response
 from flask_sqlalchemy import SQLAlchemy
@@ -21,6 +22,8 @@ app.config['MAX_CONTENT_LENGTH'] = 5 * 1024 * 1024
 app.config['FACE_ENCODING_NUM_JITTERS'] = 10
 app.config['FACE_ENCODING_MODEL'] = "large"
 app.config['FACE_LOCATION_NUM_UNSAMPLE'] = 1
+app.config['FACE_COMPARE_TOLERANCE'] = 0.5
+tolerance=app.config['FACE_COMPARE_BY_TOLERANCE'] = 1
 
 # OSS config
 app.config['OSS_HOST'] = os.environ['ALIYUN_OSS_HOST']
@@ -130,19 +133,28 @@ def search_face():
 
   face_array = []
   for index in range(len(face_encodings)):
+    face_id = -1
+    trust = 0
     face_to_check=face_encodings[index]
-    matches = face_recognition.compare_faces(known_encodings, face_to_check, tolerance=0.5)
+    position = face_locations[index]
+    matches = face_recognition.compare_faces(known_encodings, face_to_check, tolerance=app.config['FACE_COMPARE_TOLERANCE'])
 
-    if True in matches:
-      first_match_index = matches.index(True)
+    if app.config['FACE_COMPARE_BY_TOLERANCE']:
 
-      face_id = known_ids[first_match_index]
-      position = face_locations[index]
-      trust = 100
-
-      face = {"face_id": face_id, "trust": trust, "position": position}
-      face_array.append(face)
-
+      if True in matches:
+        first_match_index = matches.index(True)
+        face_id = known_ids[first_match_index]
+        trust = 100
+    else:
+        face_distances = face_recognition.face_distance(known_encodings, face_to_check)
+        best_match_index = np.argmin(face_distances)
+        if matches[best_match_index]:
+          face_id = known_ids[best_match_index]
+          trust = 1 - face_distances[best_match_index]
+    
+    face = {"face_id": face_id, "trust": trust, "position": position}
+    face_array.append(face)
+  
   delete_file(image_path)
 
   return jsonify(faces=face_array)
