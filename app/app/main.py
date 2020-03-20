@@ -65,6 +65,10 @@ def handle_bad_request(e):
     return jsonify(error='bad request!'), 400
 
 # ----------------- Routers -----------------
+@app.route('/ping', methods=['GET', 'POST'])
+def ping():
+  return jsonify(pong='pong')
+
 @app.route('/face', methods=['POST'])
 def upload_face():
   face_id = request.form.get('face-id')
