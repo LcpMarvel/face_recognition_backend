@@ -23,7 +23,7 @@ app.config['FACE_ENCODING_NUM_JITTERS'] = 10
 app.config['FACE_ENCODING_MODEL'] = "large"
 app.config['FACE_LOCATION_NUM_UNSAMPLE'] = 1
 app.config['FACE_COMPARE_TOLERANCE'] = 0.5
-tolerance=app.config['FACE_COMPARE_BY_TOLERANCE'] = 1
+app.config['FACE_COMPARE_BY_TOLERANCE'] = 0
 
 # OSS config
 app.config['OSS_HOST'] = os.environ['ALIYUN_OSS_HOST']
