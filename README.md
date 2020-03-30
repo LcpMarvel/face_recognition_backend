@@ -52,17 +52,21 @@ updateAt | number | timestamp for adding face
 
 ### ex. 
 ```
-#!/usr/bin/env python3
-import requests
-import json
-import sys
-
-payload = { 'image-url': URI/TO/FACE/IMAGE }
-result = requests.post('http://backend_url/face', data=payload).json()
+{
+	"faceId" :
+	"faceEncoding" : [
+				{
+					"engineId" :
+					"encoding" : 
+				}，
+				...
+			]
+	"updateAt" :
+}
 ```
 
 ## 2. face/[face-id-to-get]
-Get a face data from backend according to a specific face_id.
+Get a face data from backend according to a specific face id.
 
 ### Method
 GET
@@ -72,6 +76,20 @@ Return | Type | Description
 ------ | ---- | -----------
 faceId | number | identity for this face
 faceEncoding | string | encoding for the face
+
+### ex. 
+```
+{
+	"faceId" :
+	"faceEncoding" : [
+				{
+					"engineId" :
+					"encoding" : 
+				}，
+				...
+			]
+}
+```
 
 ## 3. face/[face-id-to-delete]/delete
 Remove a face from the face data set.
@@ -83,7 +101,7 @@ POST
 Return | Type | Description
 ------ | ---- | -----------
 
-## 4. face/sync
+## 4. face/sync （deprecated）
 Get a set of face data from backend according to a specific timestamp range.
 
 ### Method
@@ -126,7 +144,7 @@ engine-id | Number | face recognition engine id
 #### Return
 Return | Type | Description
 ------ | ---- | -----------
-faces | Array | a set of face encodings and face_id
+faces | Array | a set of face encodings and face id
 
 #### Object of faces:
 Return | Type | Description
@@ -139,21 +157,21 @@ timeSpent | Number | millisecond of recognizing time
 #### ex.
 ```
 {
-	“faces”:[
-		{
+	“faces” : [
+		 {
 			“faceId”:
-			“face_encoding”:
-			“position”:
+			“faceEncoding” :
+			“position” :
 				{	
-					“top”:
-					“left”
-					“bottom”:
-					“right”:
+					“top” :
+					“left” :
+					“bottom” :
+					“right” :
 				}
 		},
 		…
 	]
-	"timeSpent":
+	"timeSpent" :
 }
 ```
 
@@ -178,22 +196,21 @@ timeSpent | Number | millisecond of recognizing time
 #### ex.
 ```
 {
-	“faces”:[
-		{
-			“faceId”:
-			“face_encoding”:
-			“position”:
+	“faces” : [
+		  {
+			“faceId” :
+			“faceEncoding” :
+			“position” :
 				{	
-					“top”:
-					“left”
-					“bottom”:
+					“top” :
+					“left” :
+					“bottom” :
 					“right”:
 				}
 		},
 		…
 	]，
-	“time_spent”:
-	“error_message”:
+	“timeSpent” :
 }
 ```
 
@@ -208,25 +225,27 @@ Parameters | Type | Description
 ---------- | ---- | -----------
   
 #### Success
+Return an array of engines with following data:
+
 Return | Type | Description
 ------ | ---- | -----------
-faces | Array | a set of face engines and its ids
+id | Number | face engine id
+name | String | face engine name
 
 #### ex.
 ```
-{
-	[	
-		{
-			"id" : 1
-			“name”: "face recognition"
-		},
-		{
-			"id" : 2
-			"name" : "face++"
-		},
-		…
-	]
-}
+[
+	{
+		"id" : 1
+		“name” : "face recognition"
+	},
+	{
+		"id" : 2
+		"name" : "face++"
+	},
+	…
+]
+
 ```
 
 ## How to deploy
