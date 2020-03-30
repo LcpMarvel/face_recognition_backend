@@ -40,15 +40,15 @@ POST
 ### Parameters
 Parameters | Type | Description
 ---------- | ---- | -----------
-image-url | string | URL of a face image
-face-id | number | identity for this face image, for updating an existed face data (optional)
+image-url | String | URL of a face image
+face-id | Number | identity for this face image, for updating an existed face data (optional)
 
 #### Return
 Return | Type | Description
 ------ | ---- | -----------
-faceId | number | identity for this face image 
-faceEncoding | string | image encoding data for face dataset and face analyze
-updateAt | number | timestamp for adding face 
+faceId | Number | identity for this face image 
+faceEncoding | String | image encoding data for face dataset and face analyze
+updateAt | Number | timestamp for adding face 
 
 ### ex. 
 ```
@@ -57,7 +57,7 @@ updateAt | number | timestamp for adding face
 	"faceEncodings" : [
 				{
 					"engineId" :
-					"encoding" : 
+					"faceEncoding" : 
 				}，
 				...
 			]
@@ -74,8 +74,8 @@ GET
 #### Return
 Return | Type | Description
 ------ | ---- | -----------
-faceId | number | identity for this face
-faceEncoding | string | encoding for the face
+faceId | Number | identity for this face
+faceEncoding | String | encoding for the face
 
 ### ex. 
 ```
@@ -84,7 +84,7 @@ faceEncoding | string | encoding for the face
 	"faceEncodings" : [
 				{
 					"engineId" :
-					"encoding" : 
+					"faceEncoding" : 
 				}，
 				...
 			]
@@ -110,7 +110,7 @@ GET
 ### Parameters
 Parameters | Type | Description
 ---------- | ---- | -----------
-last-updated-at | number | latest update timestamp （optional），eitherwise return all faces.
+last-updated-at | Number | latest update timestamp （optional），eitherwise return all faces.
 
 #### Return
 Return | Type | Description
@@ -149,8 +149,8 @@ faces | Array | a set of face encodings and face id
 #### Object of faces:
 Return | Type | Description
 ------ | ---- | -----------
-faceId | number | identity for this face
-trust | number | match ranking, 0-100
+faceId | Number | identity for this face
+trust | Number | match ranking, 0-100
 position | Object | found face locations in css (top, right, bottom, left) order
 timeSpent | Number | millisecond of recognizing time
 
