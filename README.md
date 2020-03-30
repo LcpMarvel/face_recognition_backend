@@ -61,7 +61,7 @@ payload = { 'image-url': URI/TO/FACE/IMAGE }
 result = requests.post('http://backend_url/face', data=payload).json()
 ```
 
-## 2. face/<face-id>
+## 2. face/[face-id-to-get]
 Get a face data from backend according to a specific face_id.
 
 ### Method
@@ -73,7 +73,7 @@ Return | Type | Description
 faceId | number | identity for this face
 faceEncoding | string | encoding for the face
 
-## 3. face/<face-id>/delete
+## 3. face/[face-id-to-delete]/delete
 Remove a face from the face data set.
 
 ### Method 
@@ -131,17 +131,17 @@ faces | Array | a set of face encodings and face_id
 #### Object of faces:
 Return | Type | Description
 ------ | ---- | -----------
-face_id | number | error code
+faceId | number | identity for this face
 trust | number | match ranking, 0-100
 position | Object | found face locations in css (top, right, bottom, left) order
-time_spent | Number | millisecond of recognizing time
+timeSpent | Number | millisecond of recognizing time
 
 #### ex.
 ```
 {
 	“faces”:[
 		{
-			“face_id”:
+			“faceId”:
 			“face_encoding”:
 			“position”:
 				{	
@@ -153,8 +153,7 @@ time_spent | Number | millisecond of recognizing time
 		},
 		…
 	]
-	"time_spent":
-	“error_message”:
+	"timeSpent":
 }
 ```
 
@@ -174,14 +173,14 @@ engine-id | Number | face recognition engine id
 Return | Type | Description
 ------ | ---- | -----------
 faces | Array | a set of face encodings and face_id
-time_spent | Number | millisecond of recognizing time
+timeSpent | Number | millisecond of recognizing time
 
 #### ex.
 ```
 {
 	“faces”:[
 		{
-			“face_id”:
+			“faceId”:
 			“face_encoding”:
 			“position”:
 				{	
