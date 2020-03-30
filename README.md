@@ -121,6 +121,7 @@ POST
 Parameters | Type | Description
 ---------- | ---- | -----------
 image-url | String | face image to campare
+engine-id | Number | face recognition engine id
   
 #### Return
 Return | Type | Description
@@ -132,44 +133,8 @@ Return | Type | Description
 ------ | ---- | -----------
 face_id | number | error code
 trust | number | match ranking, 0-100
-position| Object | found face locations in css (top, right, bottom, left) order
-
-#### ex.
-```
-{
-	“faces”:[
-		{
-			“face_id”:
-			“trust”：
-			“position”:
-			{	
-				“top”:
-				“right”
-				“bottom”:
-				“left”:
-			}
-		
-		},
-		…
-	]
-}
-```
-
-## 5. face/detect
-Detect faces from the image.
-
-### Method 
-POST
-
-### Parameters
-Parameters | Type | Description
----------- | ---- | -----------
-image-url | String | face image to campare
-  
-#### Success
-Return | Type | Description
------- | ---- | -----------
-faces | Array | a set of face encodings and face_id
+position | Object | found face locations in css (top, right, bottom, left) order
+time_spent | Number | millisecond of recognizing time
 
 #### ex.
 ```
@@ -188,7 +153,80 @@ faces | Array | a set of face encodings and face_id
 		},
 		…
 	]
+	"time_spent":
 	“error_message”:
+}
+```
+
+## 5. face/detect
+Detect faces from the image.
+
+### Method 
+POST
+
+### Parameters
+Parameters | Type | Description
+---------- | ---- | -----------
+image-url | String | face image to campare
+engine-id | Number | face recognition engine id
+  
+#### Success
+Return | Type | Description
+------ | ---- | -----------
+faces | Array | a set of face encodings and face_id
+time_spent | Number | millisecond of recognizing time
+
+#### ex.
+```
+{
+	“faces”:[
+		{
+			“face_id”:
+			“face_encoding”:
+			“position”:
+				{	
+					“top”:
+					“left”
+					“bottom”:
+					“right”:
+				}
+		},
+		…
+	]，
+	“time_spent”:
+	“error_message”:
+}
+```
+
+## 6. face/engines
+get all face recognition engines supported in this system.
+
+### Method 
+GET
+
+### Parameters
+Parameters | Type | Description
+---------- | ---- | -----------
+  
+#### Success
+Return | Type | Description
+------ | ---- | -----------
+faces | Array | a set of face engines and its ids
+
+#### ex.
+```
+{
+	[	
+		{
+			"id" : 1
+			“name”: "face recognition"
+		},
+		{
+			"id" : 2
+			"name" : "face++"
+		},
+		…
+	]
 }
 ```
 
