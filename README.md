@@ -54,18 +54,18 @@ updateAt | number | timestamp for adding face
 ```
 {
 	"faceId" :
-	"faceEncoding" : [
+	"faceEncodings" : [
 				{
 					"engineId" :
 					"encoding" : 
 				}，
 				...
 			]
-	"updateAt" :
+	"updatedAt" :
 }
 ```
 
-## 2. face/[face-id-to-get]
+## 2. face/[face-id-to-get] (Deprecated)
 Get a face data from backend according to a specific face id.
 
 ### Method
@@ -81,7 +81,7 @@ faceEncoding | string | encoding for the face
 ```
 {
 	"faceId" :
-	"faceEncoding" : [
+	"faceEncodings" : [
 				{
 					"engineId" :
 					"encoding" : 
@@ -101,7 +101,7 @@ POST
 Return | Type | Description
 ------ | ---- | -----------
 
-## 4. face/sync （deprecated）
+## 4. face/sync （Deprecated）
 Get a set of face data from backend according to a specific timestamp range.
 
 ### Method
