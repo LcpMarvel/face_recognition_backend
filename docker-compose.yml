@@ -19,6 +19,8 @@ services:
       ALIYUN_OSS_ACCESS_KEY_SECRET: "${ALIYUN_OSS_ACCESS_KEY_SECRET}"
       ALIYUN_OSS_BUCKET_NAME: "${ALIYUN_OSS_BUCKET_NAME}"
       ALIYUN_OSS_ROLE_ARN: "${ALIYUN_OSS_ROLE_ARN}"
+      FACE_PP_KEY: "${FACE_PP_KEY}"
+      FACE_PP_SECRET: "${FACE_PP_SECRET}"
     command: 'flask run --host=0.0.0.0 --port=80'
 
   db:
