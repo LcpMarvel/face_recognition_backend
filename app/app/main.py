@@ -31,7 +31,7 @@ def handle_bad_image(e):
 
 @app.errorhandler(requests.exceptions.RequestException)
 def handle_bad_request(e):
-    return jsonify(error='bad request!'), 400
+  return jsonify(error=e.response.text), 400
 
 # ----------------- Routers -----------------
 @app.route('/ping', methods=['GET', 'POST'])
