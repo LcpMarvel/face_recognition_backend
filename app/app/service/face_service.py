@@ -23,17 +23,18 @@ def generate_encodings(image_info):
 
   return encoding, face_pp_set, face_pp_encoding
 
-def add_face(image_info):
+def add_face(image_info, meta_data):
   encoding, face_pp_set, face_pp_encoding = generate_encodings(image_info)
 
   face = Face(encoding, face_pp_set, face_pp_encoding)
+  face.meta_data = meta_data
 
   db.session.add(face)
   db.session.commit()
 
   return face
 
-def update_face(face_id, image_info):
+def update_face(face_id, image_info, meta_data):
   face = Face.find(face_id)
 
   if face:
@@ -41,6 +42,7 @@ def update_face(face_id, image_info):
     face.encoding = encoding
     face.face_pp_set = face_pp_set
     face.face_pp_encoding = face_pp_encoding
+    face.meta_data = meta_data
 
     db.session.commit()
 

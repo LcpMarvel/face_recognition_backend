@@ -2,6 +2,7 @@ import os
 import time
 import numpy as np
 import requests
+import json
 from flask import jsonify, request, Response
 
 from aliyunsdkcore import client
@@ -45,24 +46,28 @@ def engines():
 def upload_face():
   face_id = request.form.get('face-id')
   image_info = image_info_from_request(request)
+  meta_data = request.form.get('meta-data')
 
   if face_id:
-    face = update_face(face_id, image_info)
+    face = update_face(face_id, image_info, meta_data)
   else:
-    face = add_face(image_info)
+    face = add_face(image_info, meta_data)
 
   image_info.delete_file()
 
-  return jsonify(faceId=face.id, faceEncodings=face.encodings(), updatedAt=face.updated_at)
+  meta_data = json.loads(face.meta_data) if face.meta_data else None
+  return jsonify(faceId=face.id, faceEncodings=face.encodings(), updatedAt=face.updated_at, metaData=meta_data)
 
-# @app.route('/face/<face_id>')
-# def query_face(face_id):
-#   face = load_face(face_id)
-#
-#   if face:
-#     return jsonify(faceId=face.id, faceEncoding=face.encoding, updatedAt=face.updated_at)
-#   else:
-#     return jsonify(error="Face Not Found!"), 404
+@app.route('/face/<face_id>')
+def query_face(face_id):
+  face = Face.find(face_id)
+
+  if face:
+    meta_data = json.loads(face.meta_data) if face.meta_data else None
+
+    return jsonify(faceId=face.id, faceEncodings=face.encodings(), updatedAt=face.updated_at, metaData=meta_data)
+  else:
+    return jsonify(error="Face Not Found!"), 404
 
 @app.route('/face/<face_id>/delete', methods=['POST'])
 def delete_face(face_id):

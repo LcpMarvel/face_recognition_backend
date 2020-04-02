@@ -12,6 +12,7 @@ class Face(db.Model):
   face_pp_set = db.Column(db.String)
   face_pp_token = db.Column(db.String, index=True)
   updated_at = db.Column(db.Integer, default=time, onupdate=time, index=True)
+  meta_data = db.Column(JSON)
 
   @staticmethod
   def last():
@@ -31,7 +32,8 @@ class Face(db.Model):
     return f"<Face id={self.id} \
     updated_at={self.updated_at} \
     face_pp_set={self.face_pp_set} \
-    face_pp_token={self.face_pp_token}>"
+    face_pp_token={self.face_pp_token} \
+    meta_data={self.meta_data}>"
 
   def encodings(self):
     return [
