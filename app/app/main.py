@@ -1,4 +1,5 @@
 import os
+import time
 import numpy as np
 import requests
 from flask import jsonify, request, Response
@@ -97,11 +98,14 @@ def face_search():
   image_info = image_info_from_request(request)
   engine_id = request.form.get('engine-id')
 
+  start_time = time.time()
   results = search_face(engine_id, image_info)
+
+  time_spent = (time.time() - start_time) * 1000
 
   image_info.delete_file()
 
-  return jsonify(faces=results)
+  return jsonify(faces=results, timeSpent=time_spent)
 
 @app.route('/oss-auth', methods=['POST'])
 def oss_auth():
