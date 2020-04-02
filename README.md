@@ -49,6 +49,7 @@ Return | Type | Description
 faceId | Number | identity for this face image 
 faceEncoding | String | image encoding data for face dataset and face analyze
 updateAt | Number | timestamp for adding face 
+metaData | JSON | custom data for adding face
 
 ### ex. 
 ```
@@ -62,10 +63,11 @@ updateAt | Number | timestamp for adding face
 				...
 			]
 	"updatedAt" :
+  "metaData":
 }
 ```
 
-## 2. face/[face-id-to-get] (Deprecated)
+## 2. face/[face-id-to-get]
 Get a face data from backend according to a specific face id.
 
 ### Method
@@ -76,6 +78,7 @@ Return | Type | Description
 ------ | ---- | -----------
 faceId | Number | identity for this face
 faceEncoding | String | encoding for the face
+metaData | JSON | custom data for adding face
 
 ### ex. 
 ```
@@ -88,6 +91,8 @@ faceEncoding | String | encoding for the face
 				}，
 				...
 			]
+	"updatedAt" :
+  "metaData":
 }
 ```
 
