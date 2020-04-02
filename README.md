@@ -42,6 +42,7 @@ Parameters | Type | Description
 ---------- | ---- | -----------
 image-url | String | URL of a face image
 face-id | Number | identity for this face image, for updating an existed face data (optional)
+meta-data | JSON | Custom data
 
 #### Return
 Return | Type | Description
@@ -165,7 +166,7 @@ timeSpent | Number | millisecond of recognizing time
 	“faces” : [
 		 {
 			“faceId”:
-			“faceEncoding” :
+      "faceMetaData":
 			“position” :
 				{	
 					“top” :
