@@ -1,5 +1,6 @@
 import os
 import requests
+import json
 from multiprocessing.dummy import Pool as ThreadPool
 
 from .face_interface import FaceInterface, FaceNotFoundException
@@ -50,9 +51,11 @@ class FacePP(FaceInterface):
 
       if result:
         face = Face.query.filter(Face.face_pp_token == result['face_token']).one()
+        meta_data = json.loads(face.meta_data) if face.meta_data else None
 
         return {
-          'face_id': face.id,
+          'faceId': face.id,
+          'faceMetaData': meta_data,
           'position': position,
           'trust': result['confidence'] / 100
         }

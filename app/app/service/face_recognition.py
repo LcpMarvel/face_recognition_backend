@@ -1,4 +1,5 @@
 import numpy as np
+import json
 import face_recognition
 
 from .face_interface import FaceInterface, FaceNotFoundException
@@ -69,7 +70,9 @@ class FaceRecognition(FaceInterface):
           trust = 1 - face_distances[best_match_index]
 
       if face_id > 0:
-        face = {"face_id": face_id, "trust": trust, "position": self._convert_location(position)}
+        meta_data = json.loads(face.meta_data) if face.meta_data else None
+
+        face = {"faceId": face_id, "faceMetaData": meta_data, "trust": trust, "position": self._convert_location(position)}
         face_array.append(face)
 
     return face_array
