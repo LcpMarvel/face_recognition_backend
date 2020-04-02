@@ -70,10 +70,11 @@ class FaceRecognition(FaceInterface):
           trust = 1 - face_distances[best_match_index]
 
       if face_id > 0:
-        meta_data = json.loads(face.meta_data) if face.meta_data else None
+        matched_face = Face.find(face_id)
+        meta_data = json.loads(matched_face.meta_data) if matched_face.meta_data else None
 
-        face = {"faceId": face_id, "faceMetaData": meta_data, "trust": trust, "position": self._convert_location(position)}
-        face_array.append(face)
+        face_result = {"faceId": face_id, "faceMetaData": meta_data, "trust": trust, "position": self._convert_location(position)}
+        face_array.append(face_result)
 
     return face_array
 
