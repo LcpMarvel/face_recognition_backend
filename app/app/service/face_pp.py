@@ -66,6 +66,15 @@ class FacePP(FaceInterface):
 
     return results
 
+  def delete_set(self, set, force=False):
+    url = 'https://api-cn.faceplusplus.com/facepp/v3/faceset/delete'
+    data = self._api_key()
+    data['faceset_token'] = set
+    data['check_empty'] = 0 if force else 1
+
+    r = requests.post(url, data=data)
+    return r.json()
+
   def _search(self, face_pp_set, face_token):
     url = 'https://api-cn.faceplusplus.com/facepp/v3/search'
     data = self._api_key()

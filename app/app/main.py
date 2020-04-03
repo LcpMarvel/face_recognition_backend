@@ -15,6 +15,7 @@ from .helper.image_info import allowed_file, image_info_from_request, delete_fil
 from .errors import InvalidImageException, ImageNotFoundException, InvalidEngineException
 from .service.face_service import face_engines, add_face, update_face, \
   remove_face, detect_face, search_face
+from .service.face_pp import FacePP
 
 # ----------------- Error handler -----------------
 @app.errorhandler(ImageNotFoundException)
@@ -128,6 +129,16 @@ def oss_auth():
   body = clt.do_action(req)
 
   return Response(body, mimetype='application/json')
+
+@app.route('/reset', methods=['POST'])
+def reset():
+  for face_pp_set in Face.query.distinct(Face.face_pp_set):
+    FacePP().delete_set(face_pp_set, force=True)
+
+  Face.query.delete()
+  db.session.commit()
+
+  return jsonify(result="ok")
 
 if __name__ == "__main__":
     # Only for debugging while developing
