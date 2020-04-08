@@ -2,6 +2,8 @@ import os
 import requests
 import json
 from multiprocessing.dummy import Pool as ThreadPool
+from operator import is_not
+from functools import partial
 
 from .face_interface import FaceInterface, FaceNotFoundException
 from ..config import app, FACE_ENGINES
@@ -64,7 +66,7 @@ class FacePP(FaceInterface):
     pool.close()
     pool.join()
 
-    return results
+    return list(filter(partial(is_not, None), results))
 
   def delete_set(self, set, force=False):
     url = 'https://api-cn.faceplusplus.com/facepp/v3/faceset/delete'
