@@ -49,6 +49,9 @@ def update_face(face_id, image_info, meta_data):
     return face
 
 def detect_face(engine_id, image_info):
+  if engine_id is None:
+    raise InvalidEngineException
+
   id = int(engine_id)
 
   if id == FACE_ENGINES['face_recognition']:
@@ -62,6 +65,9 @@ def detect_face(engine_id, image_info):
   raise InvalidEngineException
 
 def search_face(engine_id, image_info):
+  if engine_id is None:
+    raise InvalidEngineException
+
   id = int(engine_id)
 
   if id == FACE_ENGINES['face_recognition']:
