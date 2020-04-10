@@ -43,6 +43,19 @@ def ping():
 def engines():
   return jsonify(face_engines())
 
+@app.route('/faces', methods=['GET'])
+def all_faces():
+  faces = Face.query.all()
+
+  def serialize_face(face):
+    return {
+      'faceId': face.id,
+      'metaData': json.loads(face.meta_data) if face.meta_data else None,
+      'updatedAt': face.updated_at
+    }
+
+  return jsonify(list(map(serialize_face, faces)))
+
 @app.route('/face', methods=['POST'])
 def upload_face():
   face_id = request.form.get('face-id')
