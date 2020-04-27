@@ -36,6 +36,25 @@ class FacePP(FaceInterface):
 
     return face_num, face_locations
 
+  def age_and_gender(self, image_info):
+    faces = self._detect(image_info, attributes=['gender', 'age'])
+
+    age_and_genders = []
+    face_locations = []
+
+    for face in faces:
+      result = {
+        'gender': face['attributes']['gender']['value'],
+        'age': face['attributes']['age']['value']
+      }
+
+      face_locations.append(face['face_rectangle'])
+      age_and_genders.append(result)
+
+    face_num =len(face_locations)
+
+    return face_num, face_locations, age_and_genders
+
   def search(self, image_info):
     face = Face.last()
     if not face:
@@ -96,10 +115,13 @@ class FacePP(FaceInterface):
       'api_secret': os.environ['FACE_PP_SECRET']
     }
 
-  def _detect(self, image_info):
+  def _detect(self, image_info, attributes=None):
     data = self._api_key()
 
     url = 'https://api-cn.faceplusplus.com/facepp/v3/detect'
+
+    if attributes:
+      data['return_attributes'] = ','.join(attributes)
 
     if image_info.image_url():
       data['image_url'] = image_info.image_url()

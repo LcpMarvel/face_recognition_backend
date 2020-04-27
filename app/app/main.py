@@ -9,7 +9,7 @@ from aliyunsdkcore import client
 from aliyunsdksts.request.v20150401 import AssumeRoleRequest
 import face_recognition
 
-from .config import app, db
+from .config import app, db, FACE_ENGINES
 from .model.face import Face
 from .helper.image_info import allowed_file, image_info_from_request, delete_file
 from .errors import InvalidImageException, ImageNotFoundException, InvalidEngineException
@@ -111,6 +111,18 @@ def face_detect():
   image_info.delete_file()
 
   return jsonify(num=face_num, locations=face_locations)
+
+@app.route('/face/detect-age-and-gender', methods=['POST'])
+def face_detect_age_and_gender():
+  image_info = image_info_from_request(request)
+  engine_id = request.form.get('engine-id')
+
+  if int(engine_id) == FACE_ENGINES['face_pp']:
+    face_num, face_locations, age_and_genders = FacePP().age_and_gender(image_info)
+
+    return jsonify(num=face_num, locations=face_locations, attributes=age_and_genders)
+  else:
+    return jsonify(error="Not Support!"), 400
 
 @app.route('/face/match', methods=['POST'])
 def face_search():
