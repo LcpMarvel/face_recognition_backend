@@ -254,6 +254,40 @@ name | String | face engine name
 
 ```
 
+## 7. face/detect-age-and-gender
+get age and gender.
+
+### Method
+POST
+
+### Parameters
+Parameters | Type | Description
+---------- | ---- | -----------
+image-url | String | face image to detect
+engine-id | Number | face recognition engine id
+
+#### ex.
+```
+{
+  "faces": [
+    {
+      "faceId": 52,
+      "faceMetaData": {
+        "name": "harrison"
+      },
+      "position": {
+        "height": 321,
+        "left": 384,
+        "top": 206,
+        "width": 321
+      },
+      "trust": 0.9974516126839909
+    }
+  ],
+  "timeSpent": 1646.3615894317627
+}
+```
+
 ## How to deploy
 
 ### How to add user for deploy

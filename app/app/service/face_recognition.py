@@ -1,6 +1,7 @@
 import numpy as np
 import json
 import face_recognition
+import math
 
 from .face_interface import FaceInterface, FaceNotFoundException
 from ..config import app
@@ -67,7 +68,7 @@ class FaceRecognition(FaceInterface):
         best_match_index = np.argmin(face_distances)
         if matches[best_match_index]:
           face_id = known_ids[best_match_index]
-          trust = 1 - face_distances[best_match_index]
+          trust = self.face_distance_to_conf(face_distances[best_match_index], app.config['FACE_COMPARE_TOLERANCE'])
 
       if face_id > 0:
         matched_face = Face.find(face_id)
@@ -94,3 +95,12 @@ class FaceRecognition(FaceInterface):
       'height': bottom - top
     }
 
+  def face_distance_to_conf(self, face_distance, face_match_threshold=0.6):
+    if face_distance > face_match_threshold:
+      range = (1.0 - face_match_threshold)
+      linear_val = (1.0 - face_distance) / (range * 2.0)
+      return linear_val
+    else:
+      range = face_match_threshold
+      linear_val = 1.0 - (face_distance / (range * 2.0))
+      return linear_val + ((1.0 - linear_val) * math.pow((linear_val - 0.5) * 2, 0.2))
